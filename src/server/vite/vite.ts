@@ -1,9 +1,8 @@
-import { FastifyInstance } from "fastify";
-//import { createServer as createViteServer } from "vite";
+import { FastifyInstance, FastifyPluginOptions } from "fastify";
 // @ts-expect-error
 import FastifyVite from "@fastify/vite";
 
-type ViteMiddlewareOptions = {
+type VitePluginOptions = {
   dev: boolean;
   servePath: string;
   viteConfigUrl: string;
@@ -21,27 +20,19 @@ declare module "fastify" {
   }
 }
 
-export async function registerViteMiddleware(
+export async function vitePlugin(
   fastifyInstance: FastifyInstance,
-  { dev, servePath, viteConfigUrl }: ViteMiddlewareOptions
+  { dev, servePath, viteConfigUrl }: FastifyPluginOptions & VitePluginOptions
 ) {
-  fastifyInstance.register(FastifyVite, {
+  await fastifyInstance.register(FastifyVite, {
     root: viteConfigUrl,
     dev,
     spa: true,
   });
 
-  fastifyInstance.get(servePath, (_req, reply) => {
+  fastifyInstance.get(servePath, { schema: { hide: true } }, (_req, reply) => {
     reply.html();
   });
 
-  await new Promise((resolve) => setTimeout(resolve, 1000));
   await fastifyInstance.vite.ready();
-  /*const vite = await createViteServer({
-    server: {
-      middlewareMode: true,
-    },
-    appType: "spa",
-  });
-  fastifyInstance.register(vite.middlewares);*/
 }
