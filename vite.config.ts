@@ -8,9 +8,11 @@ const root = resolve(dirname(path), "src/client");
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  //  server: {
-  //    middlewareMode: true,
-  //  },
+  server: {
+    watch: {
+      usePolling: true,
+    },
+  },
   root: root,
   plugins: [react()],
 });

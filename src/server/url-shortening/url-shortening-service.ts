@@ -33,7 +33,7 @@ export async function getShortUrlObjectByShortUrl(
     `${SHORT_URL_KEY_PREFIX}:${shortUrl}`
   );
 
-  if (!shortUrlFromRedis) {
+  if (!shortUrlFromRedis.longUrl) {
     return null;
   }
 

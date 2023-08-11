@@ -61,14 +61,15 @@ export default async function routes(
       },
     },
     async (req: GetByShortUrlRequest, reply) => {
-      const result = urlShorteningService.getShortUrlObjectByShortUrl(
+      const result = await urlShorteningService.getShortUrlObjectByShortUrl(
         req.params.shortUrl
       );
-
       if (!result) {
-        reply.status(404).send({ error: "Short URL not found" });
+        return reply.status(404).send({ error: "Short URL not found" });
       }
       await urlShorteningService.incrementVisitedCount(req.params.shortUrl);
+      // Increment the count manually on the result to not fetch the whole object again from redis
+      result.visitedCount++;
       return result;
     }
   );
@@ -108,6 +109,9 @@ export default async function routes(
         req.body.longUrl
       );
       await urlShorteningService.incrementShortenedCount(result.id);
+      // Increment the count manually on the result to not fetch the whole object again from redis
+      result.shortenedCount++;
+
       return result;
     }
   );
