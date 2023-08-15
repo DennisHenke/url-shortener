@@ -3,13 +3,9 @@ import { swaggerPlugin } from "./swagger/swagger.js";
 import { vitePlugin } from "./vite/vite.js";
 import urlShorteningRoutes from "./url-shortening/url-shortening-routes.js";
 
-//import fastifySwagger from "@fastify/swagger";
-//import fastifySwaggerUi from "@fastify/swagger-ui";
-
 const server = fastify();
 
 // Swagger Plugin to add OpenAPI documentation and Swagger UI
-//await server.register(swaggerPlugin);
 await swaggerPlugin(server, {});
 
 // API Routes
